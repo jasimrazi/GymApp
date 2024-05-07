@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymapp/screens/login_page.dart';
 import 'package:gymapp/utils.dart';
 
 class LandingPage extends StatefulWidget {
@@ -14,10 +15,12 @@ class _LandingPageState extends State<LandingPage> {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.all(15.0),
+          padding:
+              const EdgeInsets.only(top: 100, left: 20, right: 20, bottom: 50),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -40,6 +43,45 @@ class _LandingPageState extends State<LandingPage> {
                     ),
                   ],
                 ),
+                Spacer(),
+                ElevatedButton(
+                  onPressed: () {},
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor:
+                        Colors.white, // Set button text color to black
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12),
+                    child: Text(
+                      "Sign Up",
+                      style: fontStyle(18, Colors.black, FontWeight.w700),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Center(
+                  child: GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => LoginPage(),
+                          ));
+                    },
+                    child: RichText(
+                        text: TextSpan(
+                            style: AppFonts.secondaryText(context),
+                            children: [
+                          TextSpan(text: 'Aleadry a member?'),
+                          TextSpan(
+                              text: ' Login now',
+                              style: TextStyle(
+                                  decoration: TextDecoration.underline))
+                        ])),
+                  ),
+                )
               ],
             ),
           ),
