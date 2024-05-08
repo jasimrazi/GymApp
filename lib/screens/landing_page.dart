@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gymapp/screens/Signup%20Pages/signup_page.dart';
 import 'package:gymapp/screens/login_page.dart';
 import 'package:gymapp/utils.dart';
 
@@ -45,7 +46,13 @@ class _LandingPageState extends State<LandingPage> {
                 ),
                 Spacer(),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => SignupPage(),
+                        ));
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor:
                         Colors.white, // Set button text color to black
