@@ -1,8 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Import Firebase Auth package
 import 'package:gymapp/screens/home_page.dart';
 import 'package:gymapp/utils.dart';
 
 class LoginPage extends StatelessWidget {
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+
+  void signInWithEmailAndPassword(BuildContext context) async {
+    try {
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithEmailAndPassword(
+              email: emailController.text, password: passwordController.text);
+      // Navigate to the home page if login is successful
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => HomePage()),
+      );
+    } catch (e) {
+      // Handle login errors here (e.g., show error message)
+      print('Login Error: $e');
+      // Show a snackbar or dialog to indicate login failure
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('Login failed. Please check your credentials.'),
+      ));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -43,6 +67,7 @@ class LoginPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 15),
                   child: TextFormField(
+                    controller: emailController,
                     cursorColor: Color(0xff39FF14),
                     decoration: InputDecoration(
                       hintText: 'Username',
@@ -57,6 +82,7 @@ class LoginPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(bottom: 50),
                   child: TextFormField(
+                    controller: passwordController,
                     obscureText: true,
                     cursorColor: Color(0xff39FF14),
                     decoration: InputDecoration(
@@ -70,13 +96,7 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => HomePage(),
-                        )); // Add login functionality here
-                  },
+                  onPressed: () => signInWithEmailAndPassword(context),
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                   ),
