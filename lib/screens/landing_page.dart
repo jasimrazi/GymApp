@@ -16,7 +16,7 @@ class _LandingPageState extends State<LandingPage> {
       body: SafeArea(
         child: Padding(
           padding:
-              const EdgeInsets.only(top: 100, left: 20, right: 20, bottom: 50),
+              const EdgeInsets.only(top: 100, left: 50, right: 50, bottom: 50),
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
@@ -62,7 +62,7 @@ class _LandingPageState extends State<LandingPage> {
                   height: 20,
                 ),
                 Center(
-                  child: GestureDetector(
+                  child: InkWell(
                     onTap: () {
                       Navigator.push(
                           context,

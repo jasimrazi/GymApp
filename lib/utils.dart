@@ -6,9 +6,9 @@ class AppFonts {
   static TextStyle primaryText(BuildContext context) {
     return GoogleFonts.rethinkSans(
       textStyle: TextStyle(
-        fontSize: 16,
+        fontSize: 18,
         color: Colors.white,
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.w600,
       ),
     );
   }
