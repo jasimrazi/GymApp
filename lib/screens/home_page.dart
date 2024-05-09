@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
-import 'package:table_calendar/table_calendar.dart'; // Import TableCalendar package
+import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore package
+import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth package
+import 'package:gymapp/screens/Signup%20Pages/membership_page.dart';
+import 'package:table_calendar/table_calendar.dart';
 import 'package:gymapp/utils.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key});
@@ -27,12 +30,35 @@ class _HomePageState extends State<HomePage> {
     markersMaxCount: 1,
   );
 
+  String membershipName = 'Tier 1'; // Default membership name
+  DateTime expiryDate = DateTime.now(); // Default expiry date
+  String formattedExpiryDate = '';
+
   @override
   void initState() {
     super.initState();
     _calendarFormat = CalendarFormat.month;
     _focusedDay = DateTime.now();
     _selectedDay = DateTime.now();
+    fetchUserData(); // Fetch user data when the page is initialized
+  }
+
+  // Fetch user data including membership details from Firestore
+  void fetchUserData() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      DocumentSnapshot userSnapshot = await FirebaseFirestore.instance
+          .collection('personal_info')
+          .doc(user.uid)
+          .get();
+
+      setState(() {
+        membershipName = userSnapshot['membership_type'];
+        Timestamp expiryTimestamp = userSnapshot['expiry_date'];
+        expiryDate = expiryTimestamp.toDate(); // Convert Timestamp to DateTime
+        formattedExpiryDate = DateFormat('dd/MM/yyyy').format(expiryDate);
+      });
+    }
   }
 
   @override
@@ -63,16 +89,21 @@ class _HomePageState extends State<HomePage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        "Membership",
-                        style: AppFonts.primaryText(context),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            "Membership",
+                            style: AppFonts.primaryText(context),
+                          ),
+                          Text(
+                            "Expiry: $formattedExpiryDate", // Display formatted expiry date
+                            style: AppFonts.secondaryText(context),
+                          ),
+                        ],
                       ),
                       Text(
-                        "Expiry: 12/05/23",
-                        style: AppFonts.secondaryText(context),
-                      ),
-                      Text(
-                        "Tier 1",
+                        membershipName,
                         style: fontStyle(50, Colors.white, FontWeight.w900),
                       ),
                       SizedBox(
@@ -82,7 +113,14 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           InkWell(
                             borderRadius: BorderRadius.circular(100),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MembershipPage(),
+                                ),
+                              );
+                            },
                             child: Container(
                               margin: EdgeInsets.only(right: 5),
                               padding: EdgeInsets.symmetric(
@@ -100,7 +138,14 @@ class _HomePageState extends State<HomePage> {
                           ),
                           InkWell(
                             borderRadius: BorderRadius.circular(100),
-                            onTap: () {},
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => MembershipPage(),
+                                ),
+                              );
+                            },
                             child: Container(
                               padding: EdgeInsets.symmetric(
                                   vertical: 5, horizontal: 12),
@@ -195,8 +240,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                       TableCalendar(
                         firstDay: DateTime.utc(2022, 1, 1),
-                        lastDay: DateTime.utc(2100, 12,
-                            31), // Adjust lastDay to a date in the future
+                        lastDay: DateTime.utc(2100, 12, 31),
                         focusedDay: _focusedDay,
                         calendarFormat: _calendarFormat,
                         startingDayOfWeek: StartingDayOfWeek.monday,
