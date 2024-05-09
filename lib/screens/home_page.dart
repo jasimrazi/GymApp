@@ -303,17 +303,21 @@ class _HomePageState extends State<HomePage> {
           ),
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xff39FF14),
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => QRScanPage()),
-          );
-        },
-        child: Icon(
-          Icons.qr_code,
-          color: Colors.black,
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: FloatingActionButton(
+          backgroundColor: Color(0xff39FF14),
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => QRScanPage()),
+            );
+          },
+          child: Icon(
+            Icons.qr_code,
+            size: 30,
+            color: Colors.black,
+          ),
         ),
       ),
     );

@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gymapp/utils.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class QRScanPage extends StatefulWidget {
   @override
@@ -11,7 +13,8 @@ class QRScanPage extends StatefulWidget {
 class _QRScanPageState extends State<QRScanPage> {
   late QRViewController _controller;
   final GlobalKey _qrKey = GlobalKey(debugLabel: 'QR');
-  String expectedQRCode = 'jasimrazi';
+  String expectedQRCode =
+      'checkin|checkout'; // Update this with 'checkin' or 'checkout'
 
   @override
   Widget build(BuildContext context) {
@@ -45,13 +48,40 @@ class _QRScanPageState extends State<QRScanPage> {
     controller.scannedDataStream.listen((scanData) {
       // Handle scanned QR code data
       String? scannedCode = scanData.code;
-      if (scannedCode == expectedQRCode) {
+      if (scannedCode == expectedQRCode ||
+          scannedCode == 'checkin' ||
+          scannedCode == 'checkout') {
         // Show success alert box
         _showSuccessAlert();
+        // Update Firestore with check-in/check-out time
+        _updateFirestore(scannedCode!);
       }
       // Print scanned data to console (optional)
       print('Scanned Data: $scannedCode');
     });
+  }
+
+  void _updateFirestore(String code) async {
+    try {
+      FirebaseAuth auth = FirebaseAuth.instance;
+      if (auth.currentUser != null) {
+        String userId = auth.currentUser!.uid;
+        FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+        DocumentReference userRef =
+            firebaseFirestore.collection('personal_info').doc(userId);
+        Map<String, dynamic> updateData = {};
+        if (code == 'checkin') {
+          updateData['checkin'] = DateTime.now();
+        } else if (code == 'checkout') {
+          updateData['checkout'] = DateTime.now();
+        }
+        await userRef.update(updateData);
+      } else {
+        print('User not logged in.');
+      }
+    } catch (e) {
+      print('Error updating Firestore: $e');
+    }
   }
 
   void _showSuccessAlert() {
