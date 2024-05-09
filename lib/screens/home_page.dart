@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore package
 import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth package
 import 'package:gymapp/screens/Signup%20Pages/membership_page.dart';
+import 'package:gymapp/screens/profile_page.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:gymapp/utils.dart';
 import 'package:intl/intl.dart';
@@ -66,10 +67,23 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        actions: [Icon(Icons.notifications, color: Colors.white)],
-        leading: Icon(
-          Icons.person,
-          color: Colors.white,
+        actions: [
+          Icon(Icons.notifications, color: Colors.white),
+        ],
+        leading: InkWell(
+          borderRadius: BorderRadius.circular(50),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => ProfilePage(),
+              ),
+            );
+          },
+          child: Icon(
+            Icons.person,
+            color: Colors.white,
+          ),
         ),
       ),
       body: SafeArea(
