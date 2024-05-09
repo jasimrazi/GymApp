@@ -105,7 +105,7 @@ class _MembershipPageState extends State<MembershipPage> {
                   color: Color(0xff39FF14),
                   width: 2,
                 ),
-                fixedSize: Size(200, 50), // Fixed height and width
+                fixedSize: Size(250, 50), // Fixed height and width
               ),
               child: Text(
                 'Monthly Membership',
@@ -130,7 +130,7 @@ class _MembershipPageState extends State<MembershipPage> {
                   color: Color(0xff39FF14),
                   width: 2,
                 ),
-                fixedSize: Size(200, 50), // Fixed height and width
+                fixedSize: Size(250, 50), // Fixed height and width
               ),
               child: Text(
                 '3 Months Membership',
@@ -155,7 +155,7 @@ class _MembershipPageState extends State<MembershipPage> {
                   color: Color(0xff39FF14),
                   width: 2,
                 ),
-                fixedSize: Size(200, 50), // Fixed height and width
+                fixedSize: Size(250, 50), // Fixed height and width
               ),
               child: Text(
                 '1 Year Membership',

@@ -3,6 +3,7 @@ import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore packa
 import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth package
 import 'package:gymapp/screens/Signup%20Pages/membership_page.dart';
 import 'package:gymapp/screens/profile_page.dart';
+import 'package:gymapp/screens/qr_page.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:gymapp/utils.dart';
 import 'package:intl/intl.dart';
@@ -97,7 +98,7 @@ class _HomePageState extends State<HomePage> {
                   padding: EdgeInsets.all(15),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                    color: Colors.white24,
+                    color: Colors.white10,
                     borderRadius: BorderRadius.all(Radius.circular(12)),
                   ),
                   child: Column(
@@ -202,7 +203,7 @@ class _HomePageState extends State<HomePage> {
                   padding: EdgeInsets.all(15),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: Colors.white24,
+                      color: Colors.white10,
                       borderRadius: BorderRadius.all(Radius.circular(12))),
                   child: Column(
                     children: [
@@ -240,7 +241,7 @@ class _HomePageState extends State<HomePage> {
                   padding: EdgeInsets.all(15),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: Colors.white24,
+                      color: Colors.white10,
                       borderRadius: BorderRadius.all(Radius.circular(12))),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -272,7 +273,7 @@ class _HomePageState extends State<HomePage> {
                   padding: EdgeInsets.all(15),
                   width: double.infinity,
                   decoration: BoxDecoration(
-                      color: Colors.white24,
+                      color: Colors.white10,
                       borderRadius: BorderRadius.all(Radius.circular(12))),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -300,6 +301,19 @@ class _HomePageState extends State<HomePage> {
               ],
             ),
           ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: Color(0xff39FF14),
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => QRScanPage()),
+          );
+        },
+        child: Icon(
+          Icons.qr_code,
+          color: Colors.black,
         ),
       ),
     );
