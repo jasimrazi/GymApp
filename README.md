@@ -5,7 +5,8 @@ Welcome to GymApp, a Flutter project designed for gym management and membership 
 ## Features
 
 - **Membership Management:** Track member details, subscription plans, and renewal dates.
-- **Check-in/Check-out:** Allow members to check in and out conveniently.
+- **Check-in/Check-out:** Allow members to check in and out conveniently using QR codes.
+- **Daily Attendance Marking:** Mark daily attendance for members with an integrated calendar view.
 - **Payment History:** View and manage payment history for each member.
 - **Signup:** Easy signup process for new members to join the gym.
 - **Personal Information Collection:** Collect and store member personal information securely.
