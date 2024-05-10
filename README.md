@@ -14,14 +14,20 @@ Welcome to GymApp, a Flutter project designed for gym management and membership 
 
 ## Screenshots
 
-![LandingPage](screenshots/gymapp%20(1).png)
-![LoginPage](screenshots/gymapp%20(2).png)
-![PersonalinfoPage](screenshots/gymapp%20(3).png)
-![MembershipPage](screenshots/gymapp%20(4).png)
-![HomePage](screenshots/gymapp%20(5).png)
-![QRScanPage](screenshots/gymapp%20(6).png)
-![ProfilePage](screenshots/gymapp%20(7).png)
-![NotificationPage](screenshots/gymapp%20(8).png)
+<div align="center">
+  <img src="screenshots/gymapp%20(1).png" alt="LandingPage" width="150"/>
+  <img src="screenshots/gymapp%20(2).png" alt="LoginPage" width="150"/>
+  <img src="screenshots/gymapp%20(3).png" alt="PersonalinfoPage" width="150"/>
+  <img src="screenshots/gymapp%20(4).png" alt="MembershipPage" width="150"/>
+</div>
+
+<div align="center">
+  <img src="screenshots/gymapp%20(5).png" alt="HomePage" width="150"/>
+  <img src="screenshots/gymapp%20(6).png" alt="QRScanPage" width="150"/>
+  <img src="screenshots/gymapp%20(7).png" alt="ProfilePage" width="150"/>
+  <img src="screenshots/gymapp%20(8).png" alt="NotificationPage" width="150"/>
+</div>
+
 
 ## Getting Started
 
