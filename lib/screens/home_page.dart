@@ -21,8 +21,9 @@ class _HomePageState extends State<HomePage> {
   late DateTime _focusedDay;
   late DateTime _selectedDay;
   CalendarStyle _calendarStyle = CalendarStyle(
-    defaultTextStyle: fontStyle(12, Colors.white, FontWeight.w300),
-    selectedTextStyle: TextStyle(color: Colors.black),
+    outsideTextStyle: fontStyle(16, Colors.white54, FontWeight.w300),
+    defaultTextStyle: fontStyle(14, Colors.white, FontWeight.w500),
+    selectedTextStyle: fontStyle(14, Colors.black, FontWeight.w700),
     selectedDecoration: BoxDecoration(
       color: Color(0xff39FF14),
       shape: BoxShape.circle,
