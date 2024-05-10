@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:gymapp/screens/home_page.dart';
 import 'package:gymapp/utils.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -99,7 +100,10 @@ class _QRScanPageState extends State<QRScanPage> {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).popUntil((route) => route.isFirst);
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => HomePage()),
+                );
               },
               child: Text('Close', style: AppFonts.secondaryText(context)),
             ),

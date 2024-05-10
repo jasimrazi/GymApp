@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:cloud_firestore/cloud_firestore.dart'; // Import Firestore package
-import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth package
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:gymapp/screens/Signup%20Pages/membership_page.dart';
+import 'package:gymapp/screens/notifications_page.dart';
 import 'package:gymapp/screens/profile_page.dart';
 import 'package:gymapp/screens/qr_page.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -20,21 +21,26 @@ class _HomePageState extends State<HomePage> {
   late DateTime _focusedDay;
   late DateTime _selectedDay;
   CalendarStyle _calendarStyle = CalendarStyle(
+    defaultTextStyle: fontStyle(12, Colors.white, FontWeight.w300),
+    selectedTextStyle: TextStyle(color: Colors.black),
     selectedDecoration: BoxDecoration(
-      color: Colors.green,
+      color: Color(0xff39FF14),
       shape: BoxShape.circle,
     ),
     todayDecoration: BoxDecoration(
       color: Colors.transparent,
       shape: BoxShape.circle,
-      border: Border.all(color: Colors.green),
+      border: Border.all(color: Color(0xff39FF14)),
     ),
     markersMaxCount: 1,
   );
 
-  String membershipName = 'Tier 1'; // Default membership name
-  DateTime expiryDate = DateTime.now(); // Default expiry date
+  String membershipName = 'Tier 1';
+  DateTime expiryDate = DateTime.now();
   String formattedExpiryDate = '';
+  String checkinTime = '';
+  String checkoutTime = '';
+  Map<String, bool> attendanceData = {};
 
   @override
   void initState() {
@@ -42,10 +48,10 @@ class _HomePageState extends State<HomePage> {
     _calendarFormat = CalendarFormat.month;
     _focusedDay = DateTime.now();
     _selectedDay = DateTime.now();
-    fetchUserData(); // Fetch user data when the page is initialized
+    fetchUserData();
+    fetchAttendanceData();
   }
 
-  // Fetch user data including membership details from Firestore
   void fetchUserData() async {
     User? user = FirebaseAuth.instance.currentUser;
     if (user != null) {
@@ -57,8 +63,73 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         membershipName = userSnapshot['membership_type'];
         Timestamp expiryTimestamp = userSnapshot['expiry_date'];
-        expiryDate = expiryTimestamp.toDate(); // Convert Timestamp to DateTime
+        expiryDate = expiryTimestamp.toDate();
         formattedExpiryDate = DateFormat('dd/MM/yyyy').format(expiryDate);
+
+        Timestamp? checkinTimestamp = userSnapshot['checkin'];
+        Timestamp? checkoutTimestamp = userSnapshot['checkout'];
+        checkinTime = checkinTimestamp != null
+            ? DateFormat('h:mm a').format(checkinTimestamp.toDate())
+            : '';
+        checkoutTime = checkoutTimestamp != null
+            ? DateFormat('h:mm a').format(checkoutTimestamp.toDate())
+            : '';
+      });
+    }
+  }
+
+  void fetchAttendanceData() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      QuerySnapshot<Map<String, dynamic>> attendanceSnapshot =
+          await FirebaseFirestore.instance
+              .collection('personal_info')
+              .doc(user.uid)
+              .collection('attendance')
+              .get();
+
+      setState(() {
+        attendanceData = Map.fromEntries(attendanceSnapshot.docs.map(
+          (doc) => MapEntry(doc.id, doc['marked']),
+        ));
+      });
+    }
+  }
+
+  bool isDayFilled(DateTime date) {
+    String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+    return attendanceData.containsKey(formattedDate) &&
+        attendanceData[formattedDate] == true;
+  }
+
+  void markAttendance(DateTime date) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+      await FirebaseFirestore.instance
+          .collection('personal_info')
+          .doc(user.uid)
+          .collection('attendance')
+          .doc(formattedDate)
+          .set({'marked': true});
+      setState(() {
+        attendanceData[formattedDate] = true;
+      });
+    }
+  }
+
+  void unmarkAttendance(DateTime date) async {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      String formattedDate = DateFormat('yyyy-MM-dd').format(date);
+      await FirebaseFirestore.instance
+          .collection('personal_info')
+          .doc(user.uid)
+          .collection('attendance')
+          .doc(formattedDate)
+          .delete();
+      setState(() {
+        attendanceData.remove(formattedDate);
       });
     }
   }
@@ -69,7 +140,18 @@ class _HomePageState extends State<HomePage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         actions: [
-          Icon(Icons.notifications, color: Colors.white),
+          InkWell(
+            borderRadius: BorderRadius.circular(50),
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => NotificationPage(),
+                ),
+              );
+            },
+            child: Icon(Icons.notifications, color: Colors.white),
+          ),
         ],
         leading: InkWell(
           borderRadius: BorderRadius.circular(50),
@@ -112,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                             style: AppFonts.primaryText(context),
                           ),
                           Text(
-                            "Expiry: $formattedExpiryDate", // Display formatted expiry date
+                            "Expiry: $formattedExpiryDate",
                             style: AppFonts.secondaryText(context),
                           ),
                         ],
@@ -121,9 +203,7 @@ class _HomePageState extends State<HomePage> {
                         membershipName,
                         style: fontStyle(50, Colors.white, FontWeight.w900),
                       ),
-                      SizedBox(
-                        height: 10,
-                      ),
+                      SizedBox(height: 10),
                       Row(
                         children: [
                           InkWell(
@@ -224,11 +304,11 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(
-                            "7:00 PM",
+                            checkinTime,
                             style: AppFonts.secondaryText(context),
                           ),
                           Text(
-                            "10:00 PM",
+                            checkoutTime,
                             style: AppFonts.secondaryText(context),
                           ),
                         ],
@@ -250,9 +330,7 @@ class _HomePageState extends State<HomePage> {
                         "Attendance",
                         style: AppFonts.primaryText(context),
                       ),
-                      SizedBox(
-                        height: 15,
-                      ),
+                      SizedBox(height: 15),
                       TableCalendar(
                         firstDay: DateTime.utc(2022, 1, 1),
                         lastDay: DateTime.utc(2100, 12, 31),
@@ -264,6 +342,24 @@ class _HomePageState extends State<HomePage> {
                           formatButtonVisible: false,
                           titleCentered: true,
                         ),
+                        selectedDayPredicate: (day) => isDayFilled(day),
+                        onDaySelected: (selectedDay, focusedDay) {
+                          setState(() {
+                            _selectedDay = selectedDay;
+                            _focusedDay = focusedDay;
+                          });
+                        },
+                        onDayLongPressed: (selectedDay, focusedDay) {
+                          setState(() {
+                            if (isDayFilled(selectedDay)) {
+                              // If the day is already filled, unfill it
+                              unmarkAttendance(selectedDay);
+                            } else {
+                              // If the day is not filled, mark it
+                              markAttendance(selectedDay);
+                            }
+                          });
+                        },
                       ),
                     ],
                   ),

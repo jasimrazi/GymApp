@@ -53,6 +53,8 @@ class _MembershipPageState extends State<MembershipPage> {
         'membership_type': selectedMembership,
         'start_date': startDate,
         'expiry_date': calculateExpiryDate(startDate, selectedMembership),
+        'checkin': null, // Add 'checkin' field with null value
+        'checkout': null, // Add 'checkout' field with null value
       });
 
       // Navigate to the home page after saving membership info
@@ -69,6 +71,7 @@ class _MembershipPageState extends State<MembershipPage> {
       ));
     }
   }
+
 
   // Function to calculate the expiry date based on the selected membership
   DateTime calculateExpiryDate(DateTime startDate, String membershipType) {
